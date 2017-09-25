@@ -1,0 +1,3 @@
+[submodule "lib/cRegulome"]
+	path = lib/cRegulome
+	url = git@github.com:MahShaaban/cRegulome.git
