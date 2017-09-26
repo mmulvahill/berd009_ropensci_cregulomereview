@@ -1,0 +1,104 @@
+---
+title: "Install, explore and test package for review"
+author: 
+  - Matt Mulvahill
+  - Colorado Biostatistical Consortium - Department of Biostatistics - CSPH
+date: "9/25/2017"
+output: 
+  bookdown::html_document2:
+    theme: simplex
+    toc: true
+    toc_float: 
+      collapsed: false
+    number_sections: true
+  md_document:
+    variant: markdown_github
+---
+
+
+```{r}
+library(devtools)
+library(knitr)
+knitr::opts_chunk$set(echo    = TRUE,
+                      message = TRUE,
+                      warning = TRUE,
+                      results = 'markup',
+                      cache   = TRUE)
+```
+
+# Overall comments
+
+(Not sure if I should include this)
+- Do you plan on submitting to Bioconductor?  If so, use installation process in README.md:
+
+```{r install-rec, eval=FALSE}
+source("https://bioconductor.org/biocLite.R")
+biocLite()
+biocLite("BiocStyle")
+devtools::install_github("MahShaaban/cRegulome")
+```
+
+- Just included database and connect to it? Instead of `get_db() from a personal dropbox account?`
+- Something strange is happening with `print.tbl_df` on `dat_tf` in vignetted.
+  Works after `class(dat_tf)` is run, but not before.
+
+# Devtools checking
+
+- Added cRegulome as submodule -- installing from there.
+
+
+
+## `install()`
+
+Install as-is in latest commit.
+
+```{r asisinstall}
+devtools::install("./lib/cRegulome", build_vignettes = TRUE)
+```
+
+Commit d5aae84 installs without error.
+
+
+
+## `document()`
+
+Run devtools/roxygen2 document function to see if it makes any changes to
+roxygen2 generated files (NAMESPACE, man/, etc.). 
+
+```{r devtools-document}
+devtools::document("./lib/cRegulome")
+```
+
+Note, package imports `dbplyr`, `R.utils`, and `RSQLite` were deleted from
+NAMESPACE.
+
+- [ ] Looks like the package `dbplyr` is only used in the vignette and manuscript
+  -- consider moving to Suggests from Imports.
+- [ ] The `R.utils::gunzip` function is used in many places (vignette, manuscript,
+  unrun example), but is not actually used in the package code. Consider moving
+  to suggests or adding a roxygen2 line to import the function (in the
+  `get_tf()` documentation: `#' @importFrom R.utils gunzip`.
+- [ ] `RSQLite::SQLite()` has the same situation as `gunzip` above, except that it
+  is used in examples executed with `devtools::check()`.  Consider adding an 
+  `#' @importFrom RSQLite SQLite` line to documentation of functions that use
+  this function in examples.
+
+Either of the `@importFrom` suggestions could be `@import <pkgname>` also,
+though the former is preferable to avoid name conflicts.
+
+## `check()`
+
+```{r devtools-check}
+devtools::check("./lib/cRegulome")
+```
+
+- [ ] Add .git/ to the .Rbuildignore
+- [ ] "Package unavailable to check Rd xrefs: 'targetscan.Hs.eg.db' -- resolves if
+  targetscan.hs.eg.db is installed from bioconductor (doesn't have to be
+  loaded). Doesn't affect installation.
+
+
+# Session Info
+```{r sessioninfo, echo=TRUE}
+sessionInfo()
+```
