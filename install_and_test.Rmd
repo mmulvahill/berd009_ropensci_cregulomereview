@@ -34,7 +34,6 @@ knitr::opts_chunk$set(echo    = TRUE,
 ```{r install-rec, eval=FALSE}
 source("https://bioconductor.org/biocLite.R")
 biocLite()
-biocLite("BiocStyle")
 devtools::install_github("MahShaaban/cRegulome")
 ```
 
@@ -56,7 +55,7 @@ Install as-is in latest commit.
 devtools::install("./lib/cRegulome", build_vignettes = TRUE)
 ```
 
-Commit d5aae84 installs without error.
+Commit 5d6e698 installs without error.
 
 
 
@@ -92,10 +91,36 @@ though the former is preferable to avoid name conflicts.
 devtools::check("./lib/cRegulome")
 ```
 
+Notes -- 
 - [ ] Add .git/ to the .Rbuildignore
 - [ ] "Package unavailable to check Rd xrefs: 'targetscan.Hs.eg.db' -- resolves if
   targetscan.hs.eg.db is installed from bioconductor (doesn't have to be
-  loaded). Doesn't affect installation.
+  loaded). Doesn't affect installation. 
+
+## Spell check
+
+```{r devtools-check, echo=TRUE}
+devtools::spell_check("./lib/cRegulome")
+```
+
+A few mispelled words throughout.  Run `spell_check()` and resolve.
+
+# Other checks
+
+## `goodpractice::gp()`
+
+```{r goodpractice, eval=FALSE}
+if (!require(goodpractice)) devtools::install_github("MangoTheCat/goodpractice", ref = "v1.0.1")
+library(goodpractice)
+gp("./lib/cRegulome")
+```
+
+Nothing new here.  Results: 1. More unit tests 2. Imports in NAMESPACE 3. .git
+directory.
+
+
+
+
 
 
 # Session Info
