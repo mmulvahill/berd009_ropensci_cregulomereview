@@ -34,7 +34,7 @@ knitr::opts_chunk$set(echo    = TRUE,
 ```{r install-rec, eval=FALSE}
 source("https://bioconductor.org/biocLite.R")
 biocLite()
-devtools::install_github("MahShaaban/cRegulome")
+# devtools::install_github("MahShaaban/cRegulome")
 ```
 
 - Just included database and connect to it? Instead of `get_db() from a personal dropbox account?`
